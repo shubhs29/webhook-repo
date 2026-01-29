@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Event Monitor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 GitHub Event Monitor</h1>
+            <p class="subtitle">Real-time tracking of push, pull request, and merge events</p>
+            <div class="status">
+                <span class="status-indicator" id="status-indicator"></span>
+                <span id="last-update">Loading...</span>
+            </div>
+        </header>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-label">Total Events</span>
+                <span class="stat-value" id="total-events">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Push Events</span>
+                <span class="stat-value" id="push-count">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Pull Requests</span>
+                <span class="stat-value" id="pr-count">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Merges</span>
+                <span class="stat-value" id="merge-count">0</span>
+            </div>
+        </div>
+
+        <div class="events-container" id="events-container">
+            <div class="loading">Loading events...</div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
