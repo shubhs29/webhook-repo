@@ -15,6 +15,22 @@ collection = db[COLLECTION_NAME]
 collection.create_index([("timestamp", -1)])
 
 
+def get_ordinal_suffix(day):
+    """Get ordinal suffix for day (1st, 2nd, 3rd, etc.)"""
+    if 10 <= day % 100 <= 20:
+        suffix = 'th'
+    else:
+        suffix = {1: 'st', 2: 'nd', 3: 'rd'}.get(day % 10, 'th')
+    return str(day) + suffix
+
+
+def format_timestamp(dt):
+    """Format timestamp as: 1st April 2021 - 9:30 PM UTC"""
+    day_with_suffix = get_ordinal_suffix(dt.day)
+    formatted = dt.strftime(f"{day_with_suffix} %B %Y - %I:%M %p UTC")
+    return formatted
+
+
 def extract_push_data(payload):
     """Extract relevant data from GitHub push event"""
     return {
@@ -70,7 +86,7 @@ def webhook():
             # Store in MongoDB if we have valid data
             if event_data:
                 result = collection.insert_one(event_data)
-                print(f" Stored event: {event_data['action']} by {event_data['author']}")
+                print(f"✅ Stored event: {event_data['action']} by {event_data['author']}")
                 return jsonify({
                     "status": "success",
                     "message": "Event stored successfully",
@@ -102,7 +118,7 @@ def get_events():
         # Format timestamps as strings
         for event in events:
             if isinstance(event.get("timestamp"), datetime):
-                event["timestamp"] = event["timestamp"].strftime("%d %b %Y - %I:%M %p UTC")
+                event["timestamp"] = format_timestamp(event["timestamp"])
         
         return jsonify({
             "status": "success",
@@ -111,7 +127,7 @@ def get_events():
         }), 200
     
     except Exception as e:
-        print(f"Error retrieving events: {str(e)}")
+        print(f"❌ Error retrieving events: {str(e)}")
         return jsonify({
             "status": "error",
             "message": str(e)
