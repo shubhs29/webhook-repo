@@ -7,32 +7,27 @@ function formatEventMessage(event) {
     const author = `<span class="event-author">${event.author}</span>`;
     const fromBranch = event.from_branch ? `<span class="event-branch">${event.from_branch}</span>` : '';
     const toBranch = `<span class="event-branch">${event.to_branch}</span>`;
-    const timestamp = `<span class="event-timestamp">🕒 ${event.timestamp}</span>`;
+    const timestamp = `<span class="event-timestamp">${event.timestamp}</span>`;
     
     let message = '';
-    let icon = '';
+
     
     switch (event.action) {
         case 'PUSH':
-            icon = '📤';
             message = `${author} pushed to ${toBranch}`;
             break;
         case 'PULL_REQUEST':
-            icon = '🔀';
             message = `${author} submitted a pull request from ${fromBranch} to ${toBranch}`;
             break;
         case 'MERGE':
-            icon = '✅';
             message = `${author} merged branch ${fromBranch} to ${toBranch}`;
             break;
-        default:
-            icon = '📋';
+        default:    
             message = `${author} performed ${event.action}`;
     }
     
     return `
         <div class="event-header">
-            <span class="event-icon">${icon}</span>
             <span class="event-type ${event.action.toLowerCase()}">${event.action}</span>
         </div>
         <div class="event-message">${message}</div>
@@ -66,7 +61,6 @@ function displayEvents(events) {
     if (events.length === 0) {
         container.innerHTML = `
             <div class="no-events">
-                <div class="no-events-icon">📭</div>
                 <p>No events yet. Push some code or create a pull request to see events here!</p>
             </div>
         `;
@@ -113,7 +107,6 @@ function showError(message) {
     const container = document.getElementById('events-container');
     container.innerHTML = `
         <div class="no-events">
-            <div class="no-events-icon">❌</div>
             <p>${message}</p>
         </div>
     `;
@@ -121,8 +114,8 @@ function showError(message) {
 
 // Initialize the application
 function init() {
-    console.log('🚀 GitHub Event Monitor initialized');
-    console.log(`🔄 Auto-refresh every ${REFRESH_INTERVAL / 1000} seconds`);
+    console.log('GitHub Event Monitor initialized');
+    console.log(`Auto-refresh every ${REFRESH_INTERVAL / 1000} seconds`);
     
     // Initial fetch
     fetchEvents();
